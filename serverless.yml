@@ -3,29 +3,48 @@ service: affective-computing
 provider:
   name: aws
   runtime: nodejs8.10
+  region: eu-west-1
+  profile: aihackathon
+  memorySize: 3008
 
-#  iamRoleStatements:
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:ListBucket"
-#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:PutObject"
-#      Resource:
-#        Fn::Join:
-#          - ""
-#          - - "arn:aws:s3:::"
-#            - "Ref" : "ServerlessDeploymentBucket"
-#            - "/*"
+# TODO: Limit rights in production :-)
+iamRoleStatements:
+  - Effect: Allow
+    Action:
+      - s3:*
+    Resource: "*"
+  - Effect: "Allow"
+    Action:
+      - "rekognition:*"
+    Resource: "*"   
 
 functions:
+  main:
+    handler: main.handle
+    events:
+      - http: GET /
   image_upload:
+    handler: image_upload.handle
+    events:
+      - http:
+          method: POST
+          path: camera/
+          cors: true
+  image_uploaded:
     handler: image_uploaded.handle
-     - s3: s3:::ai-hackathon-affective-computing
-
-  image_upload:
+    events:
+      - s3:
+          bucket: affective-computing
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: photos/
+            - suffix: .jpg
+  spotify:
     handler: spotify.handle
-     - http:
-         path: users/create
-         method: get
+    events:
+      - http: GET spotify
+
+resources:
+  Resources:
+    Bucket:
+      Type: AWS::S3::Bucket
