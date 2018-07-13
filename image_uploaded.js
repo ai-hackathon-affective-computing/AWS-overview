@@ -74,9 +74,9 @@ const uploadPerson = (person) => {
 }
 
 const postToAgent = (person) => {
-  return axios.get({
+  return axios.request({
     method: 'get',
-    url: `${provess.env.AGENT_URL}/observe`,
+    url: `${process.env.AGENT_URL}/observe`,
     params: Object.assign({ happiness: person.happiness })
   }).then(_ => {
     console.log('Posted happiness to agent')

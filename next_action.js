@@ -21,18 +21,25 @@ const getPerson = () => {
   });
 };
 
-const getAction = (environment) => {
-  return axios.get({
+const getAction = (env) => {
+  return axios.request({
     method: 'get',
-    url: `${provess.env.AGENT_URL}/next_action`,
-    params: Object.assign({ music_on: false }, person)
-  }).then(response => response.data)
+    url: `${process.env.AGENT_URL}/next_action`,
+    params: env
+  }).then(response => response.data);
 };
 
 module.exports.handle = (event, context, callback) => {
+  if (!event.queryStringParameters || !event.queryStringParameters.music_on) {
+    return callback(null, { statusCode: 400, body: "Param music_on missing" })
+  }
+  if (!event.queryStringParameters.step) {
+    return callback(null, { statusCode: 400, body: "Param step missing" })
+  }
   return getPerson().then(person => {
     var env = {
-      music_on: (!!(event.queryStringParameters || {}).music_on) ? 1 : 0
+      music_on: parseInt(event.queryStringParameters.music_on),
+      step: parseInt(event.queryStringParameters.step)
     };
     Object.assign(env, person);
     console.log('Env', env);
