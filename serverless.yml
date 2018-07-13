@@ -1,0 +1,31 @@
+service: affective-computing
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+
+#  iamRoleStatements:
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:ListBucket"
+#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:PutObject"
+#      Resource:
+#        Fn::Join:
+#          - ""
+#          - - "arn:aws:s3:::"
+#            - "Ref" : "ServerlessDeploymentBucket"
+#            - "/*"
+
+functions:
+  image_upload:
+    handler: image_uploaded.handle
+     - s3: s3:::ai-hackathon-affective-computing
+
+  image_upload:
+    handler: spotify.handle
+     - http:
+         path: users/create
+         method: get
