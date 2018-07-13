@@ -68,7 +68,7 @@ const uploadPerson = (person) => {
     if (error) {
       console.error(error, null);
     } else {
-      console.log('Uploaded person')
+      console.log('Uploaded person');
     }
   });
 }
@@ -79,7 +79,7 @@ const postToAgent = (person) => {
     url: `${process.env.AGENT_URL}/observe`,
     params: Object.assign({ happiness: person.happiness })
   }).then(_ => {
-    console.log('Posted happiness to agent')
+    console.log('Posted happiness to agent');
   }).catch(error => {
     console.error(error);
   });
@@ -96,8 +96,8 @@ module.exports.handle = (event, context, callback) => {
       return callback(error, null);
     }
     console.log('Person', person);
-    uploadPerson(person)
-    postToAgent(person)
+    uploadPerson(person);
+    postToAgent(person);
     callback(null, {
       statusCode: 200,
       body: JSON.stringify(person)
