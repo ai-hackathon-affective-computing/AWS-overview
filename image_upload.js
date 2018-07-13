@@ -5,19 +5,18 @@ const AWS = require('aws-sdk');
 module.exports.handle = (event, context, callback) => {
   var s3 = new AWS.S3();
   var params = {
-    Body: Buffer.from(event.body, 'base64'),
     Bucket: 'affective-computing',
-    Key: 'photos/' + (new Date()).toString() + '.jpg',
-    ContentType: event.headers['content-type']
+    Key: 'photos/' + Date.now() + '.png',
+    ContentType: 'image/png',
+    ACL: 'public-read'
   };
-  s3.putObject(params, (error, response) => {
-    if (error) {
-      console.error(error);
-      return callback(error, null);
-    }
-    callback({
-      statusCode: 200,
-      body: 'OK'
-    });
+  var uploadUrl = s3.getSignedUrl('putObject', params);
+  console.log('Signed URL', uploadUrl)
+  callback(null, {
+    statusCode: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
+    body: JSON.stringify({ uploadUrl: uploadUrl })
   });
 };

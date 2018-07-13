@@ -5,29 +5,31 @@ provider:
   runtime: nodejs8.10
   region: eu-west-1
   profile: aihackathon
-  memorySize: 3008
-
-# TODO: Limit rights in production :-)
-iamRoleStatements:
-  - Effect: Allow
-    Action:
-      - s3:*
-    Resource: "*"
-  - Effect: "Allow"
-    Action:
-      - "rekognition:*"
-    Resource: "*"   
+  memorySize: 2048
+  timeout: 20
+  iamRoleStatements: # TODO: Limit rights in production :-)
+    - Effect: Allow
+      Action:
+        - s3:*
+      Resource: "*"
+    - Effect: "Allow"
+      Action:
+        - "rekognition:*"
+      Resource: "*"   
 
 functions:
-  main:
-    handler: main.handle
+  next_action:
+    handler: next_action.handle
     events:
-      - http: GET /
+      - http:
+          method: GET
+          path: next_action/
+          cors: true
   image_upload:
     handler: image_upload.handle
     events:
       - http:
-          method: POST
+          method: GET
           path: camera/
           cors: true
   image_uploaded:
@@ -38,11 +40,14 @@ functions:
           event: s3:ObjectCreated:*
           rules:
             - prefix: photos/
-            - suffix: .jpg
+            - suffix: .png
   spotify:
     handler: spotify.handle
     events:
-      - http: GET spotify
+      - http:
+          method: GET
+          path: spotify/
+          cors: true
 
 resources:
   Resources:

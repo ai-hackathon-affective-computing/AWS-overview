@@ -4,6 +4,8 @@
   "description": "Solution overview for the BMW/Siemens cross industry AI hack Affective Computing Track July 2018",
   "main": "image_uploaded.js",
   "dependencies": {
+    "axios": "^0.18.0",
+    "dotenv": "^6.0.0"
   },
   "devDependencies": {
     "aws-sdk": "^2.274.1"
