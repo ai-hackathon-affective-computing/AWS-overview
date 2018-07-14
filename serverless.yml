@@ -6,7 +6,7 @@ provider:
   region: eu-west-1
   profile: aihackathon
   memorySize: 2048
-  timeout: 20
+  timeout: 30
   iamRoleStatements: # TODO: Limit rights in production :-)
     - Effect: Allow
       Action:
@@ -32,23 +32,16 @@ functions:
           method: GET
           path: camera/
           cors: true
-  image_uploaded:
-    handler: image_uploaded.handle
-    events:
-      - s3:
-          bucket: affective-computing
-          event: s3:ObjectCreated:*
-          rules:
-            - prefix: photos/
-            - suffix: .png
-  spotify:
-    handler: spotify.handle
-    events:
-      - http:
-          method: GET
-          path: spotify/
-          cors: true
-
+  # image_uploaded:
+  #   handler: image_uploaded.handle
+  #   events:
+  #     - s3:
+  #         bucket: affective-computing
+  #         event: s3:ObjectCreated:*
+  #         rules:
+  #           - prefix: photos/
+  #           - suffix: .png
+            
 resources:
   Resources:
     Bucket:

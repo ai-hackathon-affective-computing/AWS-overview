@@ -4,9 +4,10 @@ const AWS = require('aws-sdk');
 
 module.exports.handle = (event, context, callback) => {
   var s3 = new AWS.S3();
+  var personId = Date.now();
   var params = {
     Bucket: 'affective-computing',
-    Key: 'photos/' + Date.now() + '.png',
+    Key: 'photos/' + personId + '.png',
     ContentType: 'image/png',
     ACL: 'public-read',
     Expires: 300000000
@@ -18,6 +19,6 @@ module.exports.handle = (event, context, callback) => {
     headers: {
       'Access-Control-Allow-Origin': '*',
     },
-    body: JSON.stringify({ uploadUrl: uploadUrl })
+    body: JSON.stringify({ uploadUrl: uploadUrl, personId: personId })
   });
 };

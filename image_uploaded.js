@@ -57,18 +57,18 @@ const detectPerson = (s3Object, callback) => {
   });
 };
 
-const uploadPerson = (person) => {
+const uploadPerson = (personId, person) => {
   var s3 = new AWS.S3();
   s3.putObject({
     Bucket: 'affective-computing',
-    Key: 'person.json',
+    Key: `emotions/${personId}.json`,
     Body: JSON.stringify(person),
     ACL: 'public-read'
   }, (error, _) => {
     if (error) {
       console.error(error, null);
     } else {
-      console.log('Uploaded person');
+      console.log('Uploaded person', personId);
     }
   });
 }
@@ -96,7 +96,7 @@ module.exports.handle = (event, context, callback) => {
       return callback(error, null);
     }
     console.log('Person', person);
-    uploadPerson(person);
+    uploadPerson(s3Object.Name.split('/')[1].split('.')[0], person);
     postToAgent(person);
     callback(null, {
       statusCode: 200,
