@@ -29,6 +29,16 @@ const getAction = (env) => {
   }).then(response => response.data);
 };
 
+const carAction = (action) => {
+  axios.request({
+    method: 'get',
+    url: `https://bmw-api.hackathons.de/vehicles/${process.env.VEHICLE_ID}/services/${action}/`,
+    headers: {
+      'x-api-key': process.env.CAR_API_KEY
+    }
+  }).then(_ => console.log('Honked the horn')).catch(console.error)
+}
+
 module.exports.handle = (event, context, callback) => {
   if (!event.queryStringParameters || !event.queryStringParameters.music_on) {
     return callback(null, { statusCode: 400, body: "Param music_on missing" })
@@ -45,6 +55,12 @@ module.exports.handle = (event, context, callback) => {
     console.log('Env', env);
     return getAction(env);
   }).then(response => {
+    console.log('Response', response);
+    if (response.action == 'HORN_BLOW') {
+      carAction('horn_blow');
+    } else if (response.action == 'DOOR_UNLOCK') {
+      carAction('door_unlock');
+    }
     callback(null, {
       statusCode: 200,
       headers: {
