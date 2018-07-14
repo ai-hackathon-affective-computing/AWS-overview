@@ -16,15 +16,15 @@ const calculateHappiness = (faceDetails) => {
         break;
       case 'CALM':
       case 'SURPRISED':
-        happiness += 0.3 * emotion.Confidence;
+        happiness += 0.1 * emotion.Confidence;
         break;
       case 'ANGRY':
       case 'DISGUSTED':
-        happiness -= 0.5 * emotion.Confidence;
+        happiness -= 0.8 * emotion.Confidence;
         break;
       case 'CONFUSED':
       case 'SAD':
-        happiness -= 0.3 * emotion.Confidence;
+        happiness -= 0.5 * emotion.Confidence;
         break;
       default:
         break;

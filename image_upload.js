@@ -8,7 +8,8 @@ module.exports.handle = (event, context, callback) => {
     Bucket: 'affective-computing',
     Key: 'photos/' + Date.now() + '.png',
     ContentType: 'image/png',
-    ACL: 'public-read'
+    ACL: 'public-read',
+    Expires: 300000000
   };
   var uploadUrl = s3.getSignedUrl('putObject', params);
   console.log('Signed URL', uploadUrl)

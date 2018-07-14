@@ -22,7 +22,7 @@ const getPerson = () => {
 };
 
 const getAction = (env) => {
-  return axios.request({
+return axios.request({
     method: 'get',
     url: `${process.env.AGENT_URL}/next_action`,
     params: env
@@ -41,13 +41,25 @@ const carAction = (action) => {
 
 module.exports.handle = (event, context, callback) => {
   if (!event.queryStringParameters || !event.queryStringParameters.music) {
-    return callback(null, { statusCode: 400, body: "Param music missing" })
+    return callback(null, {
+      statusCode: 400,
+      headers: { 'Access-Control-Allow-Origin': '*' },
+      body: "Param music missing"
+    })
   }
   if (!event.queryStringParameters.route) {
-    return callback(null, { statusCode: 400, body: "Param route missing" })
+    return callback(null, {
+      statusCode: 400,
+      headers: { 'Access-Control-Allow-Origin': '*' },
+      body: "Param route missing"
+    })
   }
   if (!event.queryStringParameters.step) {
-    return callback(null, { statusCode: 400, body: "Param step missing" })
+    return callback(null, {
+      statusCode: 400,
+      headers: { 'Access-Control-Allow-Origin': '*' },
+      body: "Param step missing"
+    })
   }
   return getPerson().then(person => {
     var env = {
@@ -60,20 +72,21 @@ module.exports.handle = (event, context, callback) => {
     return getAction(env);
   }).then(response => {
     console.log('Response', response);
-    if (response.action == 'HORN_BLOW') {
+    if (response.action == 9) {
       carAction('horn_blow');
-    } else if (response.action == 'DOOR_UNLOCK') {
       carAction('door_unlock');
     }
     callback(null, {
       statusCode: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-      },
+      headers: { 'Access-Control-Allow-Origin': '*' },
       body: JSON.stringify(response)
     });
   }).catch(error => {
     console.error(error);
-    callback(error, null);
+    callback(null, {
+      statusCode: 500,
+      headers: { 'Access-Control-Allow-Origin': '*' },
+      body: error.toString() // TODO: Do not tell error message in real world scenario
+    });
   });
 };
