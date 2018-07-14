@@ -50,7 +50,7 @@ const detectPerson = (s3Object, callback) => {
     }
     callback(null, {
       age: Math.round(faceDetails.AgeRange.Low + 0.5 * (faceDetails.AgeRange.High - faceDetails.AgeRange.Low)),
-      gender: (faceDetails.Gender.Value == 'female') ? 0 : 1,
+      female: (faceDetails.Gender.Value == 'female') ? 1 : 0,
       has_sunglasses: (faceDetails.Sunglasses) ? 0 : 1,
       happiness: calculateHappiness(faceDetails)
     });

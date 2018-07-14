@@ -22,7 +22,6 @@ const getPerson = () => {
 };
 
 const getAction = (env) => {
-  return Promise.resolve({ env: env, action: 'MUSIC_A' })
   return axios.request({
     method: 'get',
     url: `${process.env.AGENT_URL}/next_action`,
@@ -41,15 +40,19 @@ const carAction = (action) => {
 }
 
 module.exports.handle = (event, context, callback) => {
-  if (!event.queryStringParameters || !event.queryStringParameters.music_on) {
-    return callback(null, { statusCode: 400, body: "Param music_on missing" })
+  if (!event.queryStringParameters || !event.queryStringParameters.music) {
+    return callback(null, { statusCode: 400, body: "Param music missing" })
+  }
+  if (!event.queryStringParameters.route) {
+    return callback(null, { statusCode: 400, body: "Param route missing" })
   }
   if (!event.queryStringParameters.step) {
     return callback(null, { statusCode: 400, body: "Param step missing" })
   }
   return getPerson().then(person => {
     var env = {
-      music_on: parseInt(event.queryStringParameters.music_on),
+      music: parseInt(event.queryStringParameters.music),
+      route: parseInt(event.queryStringParameters.route),
       step: parseInt(event.queryStringParameters.step)
     };
     Object.assign(env, person);
