@@ -22,6 +22,7 @@ const getPerson = () => {
 };
 
 const getAction = (env) => {
+  return Promise.resolve({ env: env, action: 'MUSIC_A' })
   return axios.request({
     method: 'get',
     url: `${process.env.AGENT_URL}/next_action`,
