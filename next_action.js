@@ -3,6 +3,7 @@
 const AWS = require('aws-sdk');
 const axios = require('axios');
 require('dotenv').config();
+const { bucket } = require('./config')
 
 // const getPerson = (personId) => {
 //   let s3 = new AWS.S3();
@@ -56,8 +57,8 @@ const getPerson = (personId) => {
     var params = {
       Image: {
         S3Object: {
-          Bucket: 'affective-computing',
-          Name: 'photos/' + personId + '.png'    
+          Bucket: bucket,
+          Name: 'photos/' + personId + '.png'
         }
       },
       Attributes: [ 'ALL' ]

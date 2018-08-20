@@ -1,12 +1,13 @@
 'use strict';
 
 const AWS = require('aws-sdk');
+const { bucket } = require('./config')
 
 module.exports.handle = (event, context, callback) => {
   var s3 = new AWS.S3();
   var personId = Date.now();
   var params = {
-    Bucket: 'affective-computing',
+    Bucket: bucket,
     Key: 'photos/' + personId + '.png',
     ContentType: 'image/png',
     ACL: 'public-read',
